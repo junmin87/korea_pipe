@@ -13,6 +13,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  entries.push(
+    {
+      url: `${siteUrl}/tools`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/tools/romanization`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+  );
+
   const sections = getSections();
 
   for (const section of sections) {

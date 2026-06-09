@@ -20,6 +20,12 @@ export default function Header() {
               {section.title}
             </Link>
           ))}
+          <Link
+            href="/tools"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            Tools
+          </Link>
         </nav>
       </div>
     </header>
