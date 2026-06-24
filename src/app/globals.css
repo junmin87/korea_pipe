@@ -1,20 +1,43 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens — centralized in @theme so they are available both as CSS
+ * custom properties (var(--color-bg)) and as Tailwind utility classes
+ * (bg-bg, text-fg, text-fg-muted, border-border, text-accent, max-w-content,
+ * p-section, …). These add to Tailwind's defaults; the built-in palette
+ * (gray-*, etc.) is preserved.
+ */
+@theme {
+  /* Colors */
+  --color-bg: #fafaf7; /* warm off-white */
+  --color-fg: #1a1a1a; /* near-black, warm */
+  --color-fg-muted: #5c5c5c; /* secondary text */
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.16);
+  --color-accent: #2b4c7e; /* Korean indigo — links and accents only */
+  --color-accent-hover: #1f3a63;
+
+  /* Layout */
+  --container-content: 1100px; /* content max-width → max-w-content */
+  --spacing-section: 96px; /* section vertical spacing (desktop) */
+  --spacing-section-mobile: 64px; /* section vertical spacing (mobile) */
 }
 
+/*
+ * `inline` so font utilities resolve to the next/font CSS variables directly.
+ * Geist leads for Latin; Pretendard follows as the Korean (CJK) fallback.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans), var(--font-pretendard);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: var(--font-sans), sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
 }
