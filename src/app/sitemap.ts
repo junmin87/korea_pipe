@@ -1,13 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getSections, getTopics } from "@/lib/content";
+import { getSections, getTopics, getSourceLastModified } from "@/lib/content";
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hikorea.io";
-
   const entries: MetadataRoute.Sitemap = [
     {
       url: siteUrl,
-      lastModified: new Date(),
+      lastModified: getSourceLastModified("src/app/page.tsx"),
       changeFrequency: "weekly",
       priority: 1,
     },
@@ -16,13 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   entries.push(
     {
       url: `${siteUrl}/tools`,
-      lastModified: new Date(),
+      lastModified: getSourceLastModified("src/app/tools/page.tsx"),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
       url: `${siteUrl}/tools/romanization`,
-      lastModified: new Date(),
+      lastModified: getSourceLastModified("src/app/tools/romanization/page.tsx"),
       changeFrequency: "monthly",
       priority: 0.6,
     },
@@ -33,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const section of sections) {
     entries.push({
       url: `${siteUrl}/${section.slug}`,
-      lastModified: new Date(),
+      lastModified: section.updatedAt,
       changeFrequency: "weekly",
       priority: 0.8,
     });
@@ -42,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const topic of topics) {
       entries.push({
         url: `${siteUrl}/${section.slug}/${topic.slug}`,
-        lastModified: new Date(),
+        lastModified: topic.updatedAt,
         changeFrequency: "monthly",
         priority: 0.6,
       });

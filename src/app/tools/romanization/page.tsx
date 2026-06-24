@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import RomanizationTool from "@/components/RomanizationTool";
+import { siteUrl } from "@/lib/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hikorea.io";
 const pageUrl = `${siteUrl}/tools/romanization`;
 
 export function generateMetadata(): Metadata {

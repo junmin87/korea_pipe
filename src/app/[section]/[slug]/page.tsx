@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getTopic, getAllTopicPaths, getSections } from "@/lib/content";
+import { siteUrl } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
 import type { Metadata } from "next";
 
@@ -36,7 +38,6 @@ export default async function TopicPage({
   if (!topic) notFound();
 
   const sectionMeta = getSections().find((s) => s.slug === section);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hikorea.io";
 
   return (
     <>
@@ -47,6 +48,7 @@ export default async function TopicPage({
           headline: topic.title,
           description: topic.description,
           url: `${siteUrl}/${section}/${slug}`,
+          dateModified: topic.updatedAt.toISOString(),
           publisher: {
             "@type": "Organization",
             name: "HiKorea",
@@ -55,11 +57,11 @@ export default async function TopicPage({
       />
       <main className="mx-auto max-w-3xl px-4 py-12">
         <nav className="mb-8 text-sm text-gray-500">
-          <a href="/" className="hover:underline">Home</a>
+          <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <a href={`/${section}`} className="hover:underline">
+          <Link href={`/${section}`} className="hover:underline">
             {sectionMeta?.title ?? section}
-          </a>
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900">{topic.title}</span>
         </nav>

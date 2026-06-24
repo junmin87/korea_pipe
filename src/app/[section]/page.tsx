@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSections, getTopics } from "@/lib/content";
 import TopicCard from "@/components/TopicCard";
@@ -48,9 +49,9 @@ export default async function SectionPage({
       />
       <main className="mx-auto max-w-5xl px-4 py-16">
         <nav className="mb-8 text-sm text-gray-500">
-          <a href="/" className="hover:underline">
+          <Link href="/" className="hover:underline">
             Home
-          </a>
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900">{sectionMeta.title}</span>
         </nav>

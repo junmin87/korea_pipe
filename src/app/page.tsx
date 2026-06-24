@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSections } from "@/lib/content";
 import JsonLd from "@/components/JsonLd";
+import { siteUrl } from "@/lib/site";
 
 export default function HomePage() {
   const sections = getSections();
@@ -12,7 +13,7 @@ export default function HomePage() {
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "HiKorea",
-          url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://hikorea.io",
+          url: siteUrl,
           description:
             "Free Korean learning materials for English speakers.",
         }}
