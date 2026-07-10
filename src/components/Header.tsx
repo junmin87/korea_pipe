@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import HeaderAuth from "@/components/auth/HeaderAuth";
 
 // Short nav labels mapped to their section routes.
 const navLinks = [
@@ -80,19 +81,22 @@ export default function Header() {
         </Link>
 
         {/* Desktop navigation */}
-        <nav className="hidden items-center gap-6 md:flex lg:gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm font-medium transition-colors duration-150 hover:text-fg ${
-                isActive(link.href) ? "text-fg" : "text-fg-muted"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
+          <nav className="flex items-center gap-6 lg:gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors duration-150 hover:text-fg ${
+                  isActive(link.href) ? "text-fg" : "text-fg-muted"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <HeaderAuth />
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -122,6 +126,9 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <div className="flex min-h-[44px] items-center border-t border-border">
+              <HeaderAuth onNavigate={() => setMenuOpen(false)} />
+            </div>
           </nav>
         </div>
       )}

@@ -5,31 +5,72 @@
 // current user) goes through the same-origin BFF (`/api/*`) — this provider
 // never talks to the backend server or reads `document.cookie` directly.
 
-import { createContext, useContext, type ReactNode } from "react";
-import type { AuthState } from "@/types";
+import { createContext, useCallback, useContext, type ReactNode } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
+import type { AuthState, User } from "@/types";
+
+/** React Query key for the current-session lookup. */
+const ME_QUERY_KEY = ["auth", "me"] as const;
 
 /**
- * Auth context value. Currently just the {@link AuthState}; login/logout
- * actions will be added here during implementation.
- *
- * TODO: extend with `login`, `logout`, and `refresh` callbacks.
+ * Auth context value: the current {@link AuthState} plus session actions.
+ * `login` is a full-page navigation (the OAuth flow requires a browser
+ * redirect), so it is intentionally not exposed here.
  */
-export type AuthContextValue = AuthState;
+export interface AuthContextValue extends AuthState {
+  /** Clear the session via the BFF and reset local auth state. */
+  logout: () => Promise<void>;
+  /** Re-fetch the current user from `/api/auth/me`. */
+  refresh: () => Promise<void>;
+}
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 /**
- * Provide authentication state to descendants.
- *
- * @param children - Subtree that needs access to auth state.
- *
- * TODO: implement in the next session — bootstrap session from `/api/auth/me`
- * via TanStack Query, expose login/logout actions, track loading/auth status.
- * For now it provides an empty placeholder value so the tree renders.
+ * Provide authentication state to descendants. Bootstraps the session on mount
+ * by querying `/api/auth/me`; a 401 resolves to an unauthenticated state.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // TODO: replace with real session state wired to the BFF.
-  const value: AuthContextValue = {};
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery<User | null>({
+    queryKey: ME_QUERY_KEY,
+    queryFn: async () => {
+      const response = await apiClient<{ user: User }>("/api/auth/me");
+      if (!response.ok) {
+        if (response.error.status === 401) {
+          return null;
+        }
+        throw new Error(response.error.message);
+      }
+      return response.data.user;
+    },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const logout = useCallback(async () => {
+    await apiClient("/api/auth/logout", { method: "POST" });
+    queryClient.setQueryData(ME_QUERY_KEY, null);
+  }, [queryClient]);
+
+  const refresh = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ME_QUERY_KEY });
+  }, [queryClient]);
+
+  const user = data ?? null;
+  const value: AuthContextValue = {
+    user,
+    status: isLoading
+      ? "loading"
+      : user
+        ? "authenticated"
+        : "unauthenticated",
+    logout,
+    refresh,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

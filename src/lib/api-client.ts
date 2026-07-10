@@ -21,17 +21,65 @@ export interface ApiClientOptions extends Omit<RequestInit, "body"> {
  * @param path - Same-origin path beginning with `/api/`.
  * @param options - Fetch options; `body` is JSON-serialized automatically.
  * @returns The parsed {@link ApiResponse} envelope.
- *
- * TODO: implement in the next session — build fetch call, attach credentials,
- * parse JSON, map non-2xx responses to the ApiError branch, handle network
- * failures. No implementation yet.
  */
 export async function apiClient<T = unknown>(
   path: string,
   options?: ApiClientOptions,
 ): Promise<ApiResponse<T>> {
-  void path;
-  void options;
-  // TODO: implement
-  throw new Error("apiClient: not implemented");
+  const { body, headers, ...rest } = options ?? {};
+  const hasBody = body !== undefined;
+
+  try {
+    const response = await fetch(path, {
+      ...rest,
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        ...(hasBody ? { "Content-Type": "application/json" } : {}),
+        ...headers,
+      },
+      body: hasBody ? JSON.stringify(body) : undefined,
+    });
+
+    // Parse the body defensively: some routes (e.g. logout) may return no
+    // content, and error responses are not guaranteed to be JSON.
+    const text = await response.text();
+    let payload: unknown = null;
+    if (text) {
+      try {
+        payload = JSON.parse(text);
+      } catch {
+        payload = text;
+      }
+    }
+
+    if (!response.ok) {
+      const record =
+        payload && typeof payload === "object"
+          ? (payload as Record<string, unknown>)
+          : null;
+      const message =
+        (record && typeof record.message === "string" && record.message) ||
+        (record && typeof record.error === "string" && record.error) ||
+        response.statusText ||
+        "Request failed";
+      const code =
+        record && typeof record.code === "string" ? record.code : undefined;
+
+      return {
+        ok: false,
+        error: { status: response.status, message, code },
+      };
+    }
+
+    return { ok: true, data: payload as T };
+  } catch (error) {
+    return {
+      ok: false,
+      error: {
+        status: 0,
+        message: error instanceof Error ? error.message : "Network error",
+      },
+    };
+  }
 }
