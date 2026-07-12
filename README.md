@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HiKorea Web
 
-## Getting Started
+영어권 학습자용 한국어 SEO 사이트에 AI 학습 기능(구글 로그인, 튜터 챗, 문장 첨삭)을 얹은 프로젝트. 기존 HiKorea 앱 백엔드를 재사용하고, Next.js를 BFF로 두어 세션/OAuth/프록시를 담당.
 
-First, run the development server:
+**Live**: [korea-pipe.vercel.app](https://korea-pipe.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Tailwind v4 · MDX · TanStack Query · Vercel
+Backend (재사용): Express + Supabase (pgvector) + JWT, GCP App Engine
+
+## 아키텍처
+
+```
+Browser → Next.js (BFF, Vercel) → Express (GCP) → Supabase
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+클라이언트는 백엔드를 직접 호출하지 않음. `app/api/*`가 OAuth 교환, httpOnly 쿠키 관리, 백엔드 프록시를 담당.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- ✅ Google 로그인 (OAuth 2.0, httpOnly 세션, CSRF state)
+- 🚧 튜터 챗 (RAG: pgvector + text-embedding-3-small + GPT-4o-mini)
+- 🚧 문장 첨삭 (6개 언어 프롬프트 라우팅)
+- ✅ 정적 콘텐츠 33+ MDX 페이지, 로마자 변환 도구
 
-## Learn More
+## 설계 결정
 
-To learn more about Next.js, take a look at the following resources:
+**BFF**: httpOnly 쿠키를 same-origin으로 유지하고 CORS/백엔드 URL 노출을 회피.
+**기존 사이트 확장**: SEO/Analytics/MDX 파이프라인 재활용, 하나의 프로덕트로 통합.
+**웹 전용 백엔드 라우트 신설**: 앱용 로직을 건드리지 않고 사이드이펙트 격리.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Related
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Backend: [`hikorea_server_2026`](https://github.com/junmin87/hikorea_server_2026) · Mobile: HiKorea (Flutter)

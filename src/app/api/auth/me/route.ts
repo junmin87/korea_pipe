@@ -18,8 +18,8 @@ export async function GET() {
     return NextResponse.json({ message: "Invalid session" }, { status: 401 });
   }
 
-  // const id = claims.sub ?? claims.id;
-  const id = claims.sub ?? claims.id ?? claims.userId;
+  // 백엔드 컨트랙트: userId
+  const id = claims.userId;
 
   const { email, name, picture } = claims;
   if (typeof id !== "string" || typeof email !== "string") {

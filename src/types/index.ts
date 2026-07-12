@@ -20,8 +20,7 @@ export interface User {
  * present, so this stays intentionally open.
  */
 export interface SessionClaims {
-  sub?: string;
-  id?: string;
+  userId: string;
   email?: string;
   name?: string;
   picture?: string;
