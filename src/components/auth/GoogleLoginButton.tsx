@@ -38,7 +38,7 @@ export default function GoogleLoginButton() {
     <button
       type="button"
       onClick={startLogin}
-      className="inline-flex items-center justify-center gap-3 rounded-lg border border-border bg-bg px-5 py-3 text-sm font-medium text-fg transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-fg)_6%,transparent)]"
+      className="inline-flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
     >
       <GoogleIcon />
       Continue with Google

@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import { getSections, getTopics } from "@/lib/content";
 import TopicCard from "@/components/TopicCard";
 import JsonLd from "@/components/JsonLd";
+import {
+  headingMedium,
+  lead,
+  breadcrumb,
+  iconChip,
+  cx,
+  getSectionAccent,
+} from "@/lib/design-tokens";
 import type { Metadata } from "next";
 
 type Params = { section: string };
@@ -36,6 +44,8 @@ export default async function SectionPage({
   if (!sectionMeta) notFound();
 
   const topics = getTopics(section);
+  const accent = getSectionAccent(section);
+  const Icon = accent.icon;
 
   return (
     <>
@@ -48,20 +58,20 @@ export default async function SectionPage({
         }}
       />
       <main className="mx-auto max-w-5xl px-4 py-16">
-        <nav className="mb-8 text-sm text-gray-500">
+        <nav className={cx(breadcrumb, "mb-8")}>
           <Link href="/" className="hover:underline">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-900">{sectionMeta.title}</span>
+          <span className="text-slate-900">{sectionMeta.title}</span>
         </nav>
 
-        <h1 className="mb-4 text-3xl font-bold text-gray-900">
-          {sectionMeta.title}
-        </h1>
-        <p className="mb-10 max-w-2xl text-gray-600">
-          {sectionMeta.description}
-        </p>
+        {/* 섹션 대표 아이콘을 제목 위에 두어 컬러 코딩을 즉시 인지시킨다. */}
+        <span className={cx(iconChip, accent.iconWrap, "mb-4")}>
+          <Icon size={22} aria-hidden="true" />
+        </span>
+        <h1 className={cx(headingMedium, "mb-4")}>{sectionMeta.title}</h1>
+        <p className={cx(lead, "mb-10 max-w-2xl")}>{sectionMeta.description}</p>
 
         <div className="grid gap-4">
           {topics.map((topic) => (
@@ -70,6 +80,7 @@ export default async function SectionPage({
               href={`/${section}/${topic.slug}`}
               title={topic.title}
               description={topic.description}
+              sectionSlug={section}
             />
           ))}
         </div>

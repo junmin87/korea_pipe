@@ -10,13 +10,13 @@
  */
 @theme {
   /* Colors */
-  --color-bg: #fafaf7; /* warm off-white */
-  --color-fg: #1a1a1a; /* near-black, warm */
-  --color-fg-muted: #5c5c5c; /* secondary text */
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(0, 0, 0, 0.16);
-  --color-accent: #2b4c7e; /* Korean indigo — links and accents only */
-  --color-accent-hover: #1f3a63;
+  --color-bg: #ffffff; /* pure white — 언어 학습 앱 톤, 기존 크림톤 폐기 */
+  --color-fg: #0f172a; /* slate-900, near-black */
+  --color-fg-muted: #475569; /* slate-600, secondary text */
+  --color-border: rgba(15, 23, 42, 0.08); /* slate 기반 옅은 테두리 */
+  --color-border-hover: rgba(15, 23, 42, 0.16);
+  --color-accent: #0ea5e9; /* sky-500 — Primary, links and accents */
+  --color-accent-hover: #0284c7; /* sky-600 */
 
   /* Layout */
   --container-content: 1100px; /* content max-width → max-w-content */

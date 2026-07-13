@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getTopic, getAllTopicPaths, getSections } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
+import { breadcrumb, cx, getSectionAccent } from "@/lib/design-tokens";
 import type { Metadata } from "next";
 
 type Params = { section: string; slug: string };
@@ -38,6 +39,7 @@ export default async function TopicPage({
   if (!topic) notFound();
 
   const sectionMeta = getSections().find((s) => s.slug === section);
+  const accent = getSectionAccent(section);
 
   return (
     <>
@@ -56,14 +58,17 @@ export default async function TopicPage({
         }}
       />
       <main className="mx-auto max-w-3xl px-4 py-12">
-        <nav className="mb-8 text-sm text-gray-500">
+        <nav className={cx(breadcrumb, "mb-8")}>
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <Link href={`/${section}`} className="hover:underline">
+          <Link
+            href={`/${section}`}
+            className={cx(accent.text, "hover:underline")}
+          >
             {sectionMeta?.title ?? section}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-900">{topic.title}</span>
+          <span className="text-slate-900">{topic.title}</span>
         </nav>
         <article className="prose prose-lg max-w-none">
           <MDXRemote source={topic.content} />

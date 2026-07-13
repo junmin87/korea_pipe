@@ -73,11 +73,12 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex h-16 w-full max-w-content items-center justify-between px-6 lg:px-20">
+        {/* 로고: "Hi"에 Primary(sky) 액센트를 주어 브랜드 포인트를 만든다. */}
         <Link
           href="/"
-          className="font-sans text-lg font-medium tracking-tight text-fg"
+          className="font-sans text-lg font-extrabold tracking-tight text-slate-900"
         >
-          HiKorea
+          <span className="text-sky-500">Hi</span>Korea
         </Link>
 
         {/* Desktop navigation */}
@@ -87,8 +88,8 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors duration-150 hover:text-fg ${
-                  isActive(link.href) ? "text-fg" : "text-fg-muted"
+                className={`text-sm font-semibold transition-colors duration-150 hover:text-sky-600 ${
+                  isActive(link.href) ? "text-sky-600" : "text-slate-600"
                 }`}
               >
                 {link.label}
@@ -119,8 +120,8 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`flex min-h-[44px] items-center text-base font-medium transition-colors duration-150 hover:text-fg ${
-                  isActive(link.href) ? "text-fg" : "text-fg-muted"
+                className={`flex min-h-[44px] items-center text-base font-semibold transition-colors duration-150 hover:text-sky-600 ${
+                  isActive(link.href) ? "text-sky-600" : "text-slate-600"
                 }`}
               >
                 {link.label}

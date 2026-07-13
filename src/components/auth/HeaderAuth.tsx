@@ -29,7 +29,7 @@ export default function HeaderAuth({
     return (
       <div className="flex items-center gap-3">
         <span
-          className="max-w-[12rem] truncate text-sm text-fg-muted"
+          className="max-w-[12rem] truncate text-sm text-slate-600"
           title={user.email}
         >
           {user.email}
@@ -37,7 +37,7 @@ export default function HeaderAuth({
         <button
           type="button"
           onClick={handleLogout}
-          className="text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-fg"
+          className="text-sm font-medium text-slate-600 transition-colors duration-150 hover:text-slate-900"
         >
           Log out
         </button>
@@ -45,11 +45,12 @@ export default function HeaderAuth({
     );
   }
 
+  // Sign in은 primary CTA이므로 amber 액센트 필(pill)로 강조한다.
   return (
     <Link
       href="/login"
       onClick={onNavigate}
-      className="text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-fg"
+      className="inline-flex items-center rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 transition-colors duration-150 hover:bg-amber-300"
     >
       Sign in
     </Link>
